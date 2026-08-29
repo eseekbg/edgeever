@@ -795,7 +795,9 @@ export const WorkspaceApp = ({
     setImageCompressionEnabled,
     setMemoListWidth,
     setShortcutSettings,
+    setSyncIntervalMs,
     shortcutSettings,
+    syncIntervalMs,
   } = useWorkspacePreferences();
   const [rightView, setRightView] = useState<"editor" | "settings" | "plugins" | "assets" | "tags" | "templates" | "ai-prompts" | "evernote-migration">(() =>
     isInitialSettingsRoute
@@ -1309,11 +1311,12 @@ export const WorkspaceApp = ({
   }, [mobilePullToRefreshActive, refreshLatestMemos]);
 
   useWorkspaceSyncLifecycle({
-    failedSyncCount: syncSummary.error,
+    pendingSyncCount: syncSummary.total,
     backgroundRefreshKey: localDataScope,
     refreshWorkspace: refreshWorkspaceFromServer,
     runQueuedSync,
     setOnline: setIsOnline,
+    syncIntervalMs,
   });
 
   const selectedNotebookDescendantIds = useMemo(
@@ -3097,6 +3100,8 @@ export const WorkspaceApp = ({
                   onOpenAiPrompts={handleOpenAiPrompts}
                     imageCompressionEnabled={imageCompressionEnabled}
                     onImageCompressionChange={setImageCompressionEnabled}
+                    syncIntervalMs={syncIntervalMs}
+                    onSyncIntervalChange={setSyncIntervalMs}
                     shortcutSettings={shortcutSettings}
                     onShortcutSettingsChange={setShortcutSettings}
                     editorContentAlignment={editorContentAlignment}
